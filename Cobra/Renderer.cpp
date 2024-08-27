@@ -81,8 +81,5 @@ void Renderer::Render(Model model)
     glBindVertexArray(0);
     /* Swap front and back buffers */
     glfwSwapBuffers(glfwGetCurrentContext());
-
-    /* Poll for and process events */
     glfwPollEvents();
-
 }
