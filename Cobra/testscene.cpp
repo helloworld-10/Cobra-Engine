@@ -7,7 +7,7 @@ void testscene::start()
     Mesh* mesh = MeshBuilder::loadFromObj(&objname, &fname);
     Shader s("C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\vertex.glsl", "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\frag.glsl");
     model.m = mesh;
-    /*for (int i = -4; i < 4; i++) {
+    for (int i = -4; i < 4; i++) {
         for (int j = -1; j < 1; j++) {
             for (int k = -4; k < 4; k++) {
                 Transform transform;
@@ -16,11 +16,11 @@ void testscene::start()
                 model.t.push_back(transform);
             }
         }
-    }*/
-    Transform transform;
+    }
+    /*Transform transform;
     transform.scale = { 2,2,2 };
     transform.position = { 0,-5,0 };
-    model.t.push_back(transform);
+    model.t.push_back(transform);*/
     renderer.initRenderer();
 }
 

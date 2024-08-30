@@ -33,15 +33,16 @@ void Renderer::Render(Model model)
         transforms[i] = glm::translate(transforms[i], model.t[i].position);
         //add rotation with quaternion
     }
-    unsigned int transformbuffer;
-    glGenBuffers(1, &transformbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, transformbuffer);
-    glBufferData(GL_ARRAY_BUFFER, transforms.size() * sizeof(glm::mat4), &transforms[0], GL_STATIC_DRAW);
+
 
     glActiveTexture(GL_TEXTURE0); // 
     glBindTexture(GL_TEXTURE_2D, model.m->texture.id);
     glBindVertexArray(model.m->VAO);
         // vertex attributes
+        unsigned int transformbuffer;
+    glGenBuffers(1, &transformbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, transformbuffer);
+    glBufferData(GL_ARRAY_BUFFER, transforms.size() * sizeof(glm::mat4), &transforms[0], GL_STATIC_DRAW);
         std::size_t vec4Size = sizeof(glm::vec4);
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
@@ -56,10 +57,10 @@ void Renderer::Render(Model model)
         glVertexAttribDivisor(4, 1);
         glVertexAttribDivisor(5, 1);
         glVertexAttribDivisor(6, 1);
-        //glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
+        glBindVertexArray(0);
+        glDeleteBuffers(1, &transformbuffer);
     
-
+        glBindVertexArray(model.m->VAO);
 
 
 
