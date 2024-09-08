@@ -3,6 +3,10 @@
 
 static GLFWwindow* window;
 static Scene* scene;
+static bool keys[348];
+static bool mouseButton[3];
+static bool isDragging;
+static double lastXPos, lastYPos, currXPos, currYPos,scrollX,scrollY;
 void Application::start()
 {
 
@@ -17,10 +21,14 @@ void Application::start()
         glfwTerminate();
         return;
     }
-
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+    glfwSetScrollCallback(window, mouseScrollCallback);
+    glfwSetCursorPosCallback(window, mousePositionCallback);
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwGetCursorPos(window,&currXPos,&currYPos);
 
 }
 
@@ -50,10 +58,81 @@ void Application::run()
     while (!glfwWindowShouldClose(window))
     {
         scene->update();
+       // glfwGetCursorPos(window, &lastXPos, &lastYPos);
+
     }
+}
+
+bool Application::isKeyPressed(int key)
+{
+    return keys[key];
+}
+
+bool Application::isMouseButtonPressed(int button) {
+    return mouseButton[button];
 }
 
 void Application::closeWindow() {
     scene->close();
     glfwTerminate();
+}
+
+void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (action == GLFW_PRESS) {
+        keys[key] = true;
+    }
+    else if (action == GLFW_RELEASE) {
+        keys[key] = false;
+    }
+}
+
+void Application::mousePositionCallback(GLFWwindow* window, double xPosition, double yPosition) {
+    lastXPos = currXPos;
+    lastYPos = currYPos;
+    currXPos = xPosition;
+    currYPos = yPosition;
+    isDragging = mouseButton[0] || mouseButton[2] || mouseButton[3];
+}
+
+void Application::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        mouseButton[button] = true;
+    }
+    else if (action == GLFW_RELEASE) {
+        mouseButton[button] = false;
+        isDragging = false;
+    }
+}
+
+void Application::mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+    scrollY -= yOffset;
+    scrollX -= xOffset;
+}
+
+bool Application::cursorIsDragging() {
+    return isDragging;
+}
+
+double Application::getXPos() {
+    return currXPos;
+}
+
+double Application::getYPos() {
+    return currYPos;
+}
+
+double Application::getXChange() {
+        return currXPos - lastXPos;
+}
+
+double Application::getYChange() {
+        return lastYPos - currYPos;
+}
+
+double Application::getScrollYPos() {
+    return scrollY;
+}
+double Application::getScrollXPos() {
+    return scrollX;
 }

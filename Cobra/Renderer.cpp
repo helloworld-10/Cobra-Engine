@@ -1,12 +1,19 @@
 #include "Renderer.h"
 #include <GLFW/glfw3.h>
+#include "Application.h"
 
 
 
-
+float yaw = -90.0f;
+float pitch = 0;
+float roll = 0;
+float fov = 45;
+float prevChangeY = 0;
+float prevChangeX = 0;
+float prevScroll = 0;
 void Renderer::initRenderer() {
 	camera.position = glm::vec3(0, 10.0, 10);
-	camera.camFront = glm::vec3(0.0, 0.0, 0.0);
+	camera.camFront = glm::vec3(0.0, 0.0, -1.0);
 	camera.camUp = glm::vec3(0.0, 1.0, 0.0);
     camera.projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 	shader = new Shader("C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\vertex.glsl", "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\frag.glsl");
@@ -17,7 +24,7 @@ void Renderer::initRenderer() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendFuncSeparate(GL_SRC1_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 	glCullFace(GL_BACK);
-    glClearColor(1, 1, 1, 1);
+    glClearColor(1, 0, 0, 1);
 }
 
 
@@ -67,14 +74,77 @@ void Renderer::Render(Model model)
     (*shader).use();
 
 
-    camera.position.x = sin(glfwGetTime()) * 60;
-    camera.position.z = cos(glfwGetTime()) * 60;
+    float speed = 0.2f;
+    glm::vec3 right = { 1,0,0 };
+    glm::vec3 up = { 0,1,0 };
+    glm::vec3 forward = { 0,0,1 };
+    if (Application::isKeyPressed(GLFW_KEY_W)) {
+        
+        camera.position += speed* camera.camFront;
+    }
+    if (Application::isKeyPressed(GLFW_KEY_A)) {
+        camera.position -= speed* glm::cross(camera.camFront,camera.camUp);
+    }
+    if (Application::isKeyPressed(GLFW_KEY_S)) {
+        camera.position -= speed * camera.camFront;
+    }
+    if (Application::isKeyPressed(GLFW_KEY_D)) {
+        camera.position += speed * glm::cross(camera.camFront, camera.camUp);
+    }
+    if (Application::isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+        camera.position -= speed * up;
+    }
+    if (Application::isKeyPressed(GLFW_KEY_SPACE)) {
+        camera.position += speed * up;
+    }
+    if (Application::isKeyPressed(GLFW_KEY_ESCAPE)) {
+        Application::closeWindow();
+    }
+    camera.camFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    camera.camFront.y = sin(glm::radians(pitch));
+    camera.camFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    if (Application::getXChange() != prevChangeX) {
+        yaw += 0.09 * Application::getXChange();
+        prevChangeX = Application::getXChange();
+    }
+    if (Application::getYChange() != prevChangeY) {
+        pitch += 0.09*Application::getYChange();
+        prevChangeY = Application::getYChange();
+    }
 
-    glm::mat4 view = glm::lookAt(camera.position, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    if (Application::getScrollYPos() != prevScroll) {
+        fov -= (float)Application::getScrollYPos() / 20.0f;
+        prevScroll = Application::getScrollYPos();
+    }
+    if (fov < 1.0f)
+        fov = 1.0f;
+    if (fov > 90.0f)
+        fov = 45.0f;
+//std::cout << (float)Application::getYChange()<< std::endl;
+    camera.projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 1000.0f);
+    camera.camFront = glm::normalize(camera.camFront);
+    //camera.camRight = glm::normalize(glm::cross(camera.camUp, up));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+    //camera.camUp = glm::normalize(glm::cross(camera.camRight, camera.camFront));
+
+
+    glm::mat4 view = glm::lookAt(camera.position, camera.position+camera.camFront, camera.camUp);
     shader->setMat4("view", view);
     shader->setMat4("projection", camera.projection);
-    glm::vec3 lightPos(0.0 ,10.0,5.0);
-    glm::vec3 lightColor(0.5,0.1,0.1);
+    float lightX = sin(glfwGetTime()) * 10.0;
+    float lightY = sin(glfwGetTime()) * 10.0* cos(glfwGetTime());
+    float lightZ = cos(glfwGetTime()) * 10.0;
+    glm::vec3 lightPos(lightX ,lightY, lightZ);
+    //glm::vec3 lightColor(0.894, 0.721, 0.043);
+    float r = glm::max(glm::sin(glfwGetTime()),0.2);
+    float g = glm::max(glm::cos(glfwGetTime()),0.2);
+    float b = glm::max(glm::sin(glfwGetTime()) * glm::sin(glfwGetTime()),0.2);
+    glm::vec3 lightColor(r,g,b);
+
     (*shader).setVec3("lightPos", lightPos);
     (*shader).setVec3("camPos", camera.position);
     shader->setVec3("lightColor", lightColor);

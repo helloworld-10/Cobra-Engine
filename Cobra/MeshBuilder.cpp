@@ -88,8 +88,8 @@ Mesh* MeshBuilder::createMesh(std::vector<Vertex> vertices, std::vector<unsigned
 Mesh* MeshBuilder::loadFromObj(const std::string* filename, const std::string* texname) {
 	std::ifstream in;
 	in.open((*filename));
-	if (in.is_open()) {
-		std::cout << "yay"<<std::endl;
+	if (!in.is_open()) {
+		std::cout << "error in obj loading"<<std::endl;
 	}
 	std::string line;
 	std::vector<double> pos;
