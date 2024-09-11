@@ -19,13 +19,18 @@
 #include "Application.h"
 #include "testscene.h"
 #include "Scene.h"
+#include "Component.h"
 int main(void)
 {
 
     Application::start();
     testscene test;
+    MeshComponent m;
+    TransformComponent t;
     Application::addScene(&test);
     Application::run();
     Application::closeWindow();
+    
+
     return 0;
 }
