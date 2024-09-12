@@ -18,7 +18,9 @@ public:
 private:
 	int componentIndex = 0;
 	//std::unordered_map<std::bitset<100>, std::vector<int>> entityComponents;
-	std::list<std::vector<Component>> components;
+	//std::list<std::vector<Component>> components;
+	//TODO: implement sparse set, make vector of sparse sets to store components, use entities as keys for the sparseset
+	//TODO: find a way for the user to input a component into functions : either giving access to scene or using comp name or some other method (most likely using the comp name provided by player)
 	std::unordered_map<int, std::vector<componentIndexPair>> entityComponents;
 
 };

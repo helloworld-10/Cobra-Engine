@@ -31,5 +31,4 @@ void testscene::update()
 
 void testscene::close()
 {
-    delete(this);
 }
