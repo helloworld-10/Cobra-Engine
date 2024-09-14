@@ -1,4 +1,5 @@
 #pragma once
+#include "ComponentManager.h"
 class Scene {
 
 public:

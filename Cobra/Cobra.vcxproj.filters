@@ -39,6 +39,9 @@
     <ClCompile Include="Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glm\detail\_features.hpp">
@@ -927,6 +930,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

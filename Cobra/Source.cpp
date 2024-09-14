@@ -25,8 +25,11 @@ int main(void)
 
     Application::start();
     testscene test;
-    MeshComponent m;
-    TransformComponent t;
+    //Mesh m1;
+    //MeshComponent m;
+    //Component* c = (Component*)(&m);
+    //MeshComponent* m2 = (MeshComponent*)c;
+    //std::cout << m2->name << std::endl;
     Application::addScene(&test);
     Application::run();
     Application::closeWindow();
