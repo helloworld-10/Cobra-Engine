@@ -2,21 +2,34 @@
 #include <unordered_map>
 #include <string>
 #include "Component.h"
-#include <bitset>
-//struct componentIndexPair {
-//	int id;
-//	int index;
-//};
+using bitset = int;
+using entity = int;
 class ComponentManager {
 public:
-	void addComponent(int entity, Component* component);
-	void registerComponent(Component* component);
-	void removeComponent(int entity, const std::string* name);
-	Component* getComponent(int entity, const std::string* name);
-	std::vector<Component> getComponents(const std::string* name);
+	template<typename T>
+	void addComponent(entity entity, T component);
+
+	template<typename... T>
+	void registerComponent();
+
+	template<typename T>
+	void removeComponent(entity entity);
+	
+	template<typename T>
+	T* getComponent(entity entity);
+
+	template<typename...T>
+	std::tuple<T...> getComponents(entity entity);
+
+	//template <typename T>
+	//std::vector<T> getComponents(const std::string* name);
+
+	template<typename T>
+	bool hasComponent(entity entity);
 private:
-	int componentIndex = 0;
-	std::unordered_map<std::bitset<100>, std::vector<int>> hasComponent;
+	int componentIndex = 1;
+	std::unordered_map<entity,bitset> entityComponents;
+
 	std::vector<std::unordered_map<int,Component>> components;
 	//TODO: implement sparse set, make vector of sparse sets to store components, use entities as keys for the sparseset
 	//TODO: find a way for the user to input a component into functions : either giving access to scene or using comp name or some other method (most likely using the comp name provided by player)
