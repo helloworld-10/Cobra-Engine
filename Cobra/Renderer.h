@@ -9,7 +9,6 @@
 class Renderer {
 	public:
 		void initRenderer();
-		//void Render(Model model);
 		void Render(ComponentManager* manager);
 	private:
 		Shader* shader;	
@@ -17,4 +16,7 @@ class Renderer {
 		void Render(std::shared_ptr<MeshComponent> mesh, std::vector<TransformComponent> transforms);
 	std::shared_ptr<CameraComponent> camera;
 		std::unordered_map<std::shared_ptr<MeshComponent>, std::vector<TransformComponent>> meshes;
+		std::vector <PointLightComponent> lights;
+		std::vector<TransformComponent> lightTransforms;
+		std::shared_ptr<DirectionalLightComponent> sun;
 };

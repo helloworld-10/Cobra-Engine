@@ -11,6 +11,7 @@
 #include "glm/mat3x3.hpp"
 #include "glm/mat4x4.hpp"
 #include <vector>
+#include "Component.h"
 class Shader
 {
 public:
@@ -35,4 +36,9 @@ public:
     void setMat3(const std::string& name, const glm::mat3& mat);
     void setMat4(const std::string& name, const glm::mat4& mat);
     void setMat4Array(const std::string& name, const std::vector<glm::mat4> mat, int size);
+    void setVec3Array(const std::string& name, const std::vector<glm::vec3> vecs, const std::string& structComp, int size);
+    void setFloatArray(const std::string& name, const std::vector<float> vecs, const std::string& structComp, int size);
+    void setPointLightArray(const std::string& name, const std::vector<PointLightComponent> lights, const std::vector<TransformComponent> transforms);
+    void setDirLight(const std::string& name, const DirectionalLightComponent dirLight);
+
 };

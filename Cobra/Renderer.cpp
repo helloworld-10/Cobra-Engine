@@ -35,18 +35,28 @@ void Renderer::Render(ComponentManager* manager)
     std::vector<entity> entities = manager->getEntities();
     
     for (entity entity : entities) {
-        
+
         if (manager->hasComponent<MeshComponent>(entity)) {
-            
             meshes[manager->getComponent<MeshComponent>(entity)].push_back(*(manager->getComponent<TransformComponent>(entity)));
-           
+        }
+        if (manager->hasComponent<PointLightComponent>(entity)) {
+            lights.push_back(*manager->getComponent<PointLightComponent>(entity));
+            lightTransforms.push_back(*manager->getComponent<TransformComponent>(entity));
+        }
+        if (manager->hasComponent<DirectionalLightComponent>(entity)) {
+            sun = manager->getComponent<DirectionalLightComponent>(entity);
         }
     }
 
     for (const auto& mesh : meshes) {
+        
         Renderer::Render(mesh.first, mesh.second);
     }
+    
     meshes.clear();
+    lights.clear();
+    lightTransforms.clear();
+    
 }
 
 
@@ -162,9 +172,9 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<Transform
     float b = glm::max(glm::sin(glfwGetTime()) * glm::sin(glfwGetTime()), 0.2);
     glm::vec3 lightColor(r, g, b);
 
-    (*shader).setVec3("lightPos", lightPos);
     (*shader).setVec3("camPos", camera->position);
-    shader->setVec3("lightColor", lightColor);
+    shader->setPointLightArray("pointLights", lights,lightTransforms);
+    shader->setDirLight("dirLight", *sun);
     glDrawElementsInstanced(GL_TRIANGLES, static_cast<unsigned int>(mesh->m->indices.size()), GL_UNSIGNED_INT, 0, transform.size());
     glBindVertexArray(0);
     /* Swap front and back buffers */

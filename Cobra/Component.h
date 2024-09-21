@@ -26,3 +26,20 @@ struct CameraComponent :public Component {
 	glm::mat4 projection;
 	float fov;
 };
+
+struct DirectionalLightComponent :public Component {
+	glm::vec3 direction;
+	glm::vec3 color;
+};
+
+struct PointLightComponent :public Component {
+	glm::vec3 color;
+	glm::vec3 attenuation;
+};
+
+struct SpotlightComponent :public Component {
+	glm::vec3  direction;
+	glm::vec3 color;
+	float innerCutoff;
+	float outerCutoff;
+};

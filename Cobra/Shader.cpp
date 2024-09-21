@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 
+
     unsigned int ID;
     Shader::Shader(const char* vertexPath, const char* fragmentPath)
     {
@@ -145,5 +146,41 @@
             Shader::setMat4((name+"[" + std::to_string(i) + "]"), matrices[i]);
         }
 
+    }
+
+    void Shader::setVec3Array(const std::string& name, const std::vector<glm::vec3> vecs, const std::string& structComp,int size)
+    {
+        for (unsigned int i = 0; i < size; i++)
+        {
+            Shader::setVec3((name + "[" + std::to_string(i) + "]"+structComp), vecs[i]);
+        }
+    }
+
+    void Shader::setFloatArray(const std::string& name, const std::vector<float> vecs, const std::string& structComp, int size)
+    {
+        for (unsigned int i = 0; i < size; i++)
+        {
+            Shader::setFloat((name + "[" + std::to_string(i) + "]" + structComp), vecs[i]);
+        }
+    }
+
+    void Shader::setPointLightArray(const std::string& name, const std::vector<PointLightComponent> lights, const std::vector<TransformComponent> transforms) {
+        for (unsigned int i = 0; i < lights.size(); i++)
+        {
+            
+            Shader::setVec3((name + "[" + std::to_string(i) + "].color"), lights[i].color);
+            Shader::setVec3((name + "[" + std::to_string(i) + "].function"), lights[i].attenuation);
+        }
+        for (int i = 0; i < transforms.size(); i++)
+        {
+            Shader::setVec3((name + "[" + std::to_string(i) + "].position"), transforms[i].position);
+        }
+
+    }
+
+    void Shader::setDirLight(const std::string& name, const DirectionalLightComponent dirLight)
+    {
+        Shader::setVec3((name+".color"), dirLight.color);
+        Shader::setVec3((name+ ".direction"), dirLight.direction);
     }
 

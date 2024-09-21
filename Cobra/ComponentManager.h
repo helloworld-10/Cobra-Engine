@@ -78,8 +78,6 @@ public:
 		return std::make_tuple(getComponent<T>(entity)...);
 	}
 
-	//template <typename T>
-	//std::vector<T> getComponents(const std::string* name);
 
 
 	template<typename T>
