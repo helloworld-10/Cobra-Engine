@@ -6,10 +6,12 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "ComponentManager.h"
 #include "Component.h"
-class Renderer {
+#include "Behavior.h"
+class Renderer : public Behavior{
 	public:
-		void initRenderer();
-		void Render(ComponentManager* manager);
+		 void init() override;
+		 void update(ComponentManager* manager) override;
+		 void exit() override;
 	private:
 		Shader* shader;	
 		void findCamera(ComponentManager* manager);

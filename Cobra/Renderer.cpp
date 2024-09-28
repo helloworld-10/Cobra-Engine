@@ -4,21 +4,15 @@
 #include <iostream>
 
 
-float yaw = -90.0f;
-float pitch = 0;
-float roll = 0;
-float fov = 45;
-float prevChangeY = 0;
-float prevChangeX = 0;
-float prevScroll = 0;
-void Renderer::initRenderer() {
+
+void Renderer::init() {
 
 	shader = new Shader("C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\vertex.glsl", "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\frag.glsl");
 	glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendFuncSeparate(GL_SRC1_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 	glCullFace(GL_BACK);
     glClearColor(1, 0, 0, 1);
@@ -27,7 +21,7 @@ void Renderer::initRenderer() {
 
 
 
-void Renderer::Render(ComponentManager* manager)
+void Renderer::update(ComponentManager* manager)
 {
     
     findCamera(manager);
@@ -35,10 +29,12 @@ void Renderer::Render(ComponentManager* manager)
     std::vector<entity> entities = manager->getEntities();
     
     for (entity entity : entities) {
-
+        
         if (manager->hasComponent<MeshComponent>(entity)) {
+            
             meshes[manager->getComponent<MeshComponent>(entity)].push_back(*(manager->getComponent<TransformComponent>(entity)));
         }
+        
         if (manager->hasComponent<PointLightComponent>(entity)) {
             lights.push_back(*manager->getComponent<PointLightComponent>(entity));
             lightTransforms.push_back(*manager->getComponent<TransformComponent>(entity));
@@ -47,7 +43,7 @@ void Renderer::Render(ComponentManager* manager)
             sun = manager->getComponent<DirectionalLightComponent>(entity);
         }
     }
-
+    
     for (const auto& mesh : meshes) {
         
         Renderer::Render(mesh.first, mesh.second);
@@ -56,7 +52,11 @@ void Renderer::Render(ComponentManager* manager)
     meshes.clear();
     lights.clear();
     lightTransforms.clear();
-    
+
+}
+
+void Renderer::exit()
+{
 }
 
 
@@ -105,58 +105,8 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<Transform
 
     (*shader).use();
 
-    float speed = 0.2f;
-    glm::vec3 right = { 1,0,0 };
-    glm::vec3 up = { 0,1,0 };
-    glm::vec3 forward = { 0,0,1 };
-    if (Application::isKeyPressed(GLFW_KEY_W)) {
-
-        camera->position += speed * camera->camFront;
-    }
-    if (Application::isKeyPressed(GLFW_KEY_A)) {
-        camera->position -= speed * glm::cross(camera->camFront, camera->camUp);
-    }
-    if (Application::isKeyPressed(GLFW_KEY_S)) {
-        camera->position -= speed * camera->camFront;
-    }
-    if (Application::isKeyPressed(GLFW_KEY_D)) {
-        camera->position += speed * glm::cross(camera->camFront, camera->camUp);
-    }
-    if (Application::isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-        camera->position -= speed * up;
-    }
-    if (Application::isKeyPressed(GLFW_KEY_SPACE)) {
-        camera->position += speed * up;
-    }
-    if (Application::isKeyPressed(GLFW_KEY_ESCAPE)) {
-        Application::closeWindow();
-    }
-    camera->camFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    camera->camFront.y = sin(glm::radians(pitch));
-    camera->camFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    if (Application::getXChange() != prevChangeX) {
-        yaw += 0.09 * Application::getXChange();
-        prevChangeX = Application::getXChange();
-    }
-    if (Application::getYChange() != prevChangeY) {
-        pitch += 0.09 * Application::getYChange();
-        prevChangeY = Application::getYChange();
-    }
-
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    if (Application::getScrollYPos() != prevScroll) {
-        fov -= (float)Application::getScrollYPos() / 20.0f;
-        prevScroll = Application::getScrollYPos();
-    }
-    if (fov < 1.0f)
-        fov = 1.0f;
-    if (fov > 90.0f)
-        fov = 45.0f;
-    camera->projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 1000.0f);
+    
+    camera->projection = glm::perspective(glm::radians(camera->fov), 800.0f / 600.0f, 0.1f, 1000.0f);
     camera->camFront = glm::normalize(camera->camFront);
 
     glm::mat4 view = glm::lookAt(camera->position, camera->position + camera->camFront, camera->camUp);

@@ -24,7 +24,7 @@ struct CameraComponent :public Component {
 	glm::vec3 camUp;
 	glm::vec3 camRight;
 	glm::mat4 projection;
-	float fov;
+	float fov = 45;
 };
 
 struct DirectionalLightComponent :public Component {

@@ -5,7 +5,6 @@ void testscene::start()
     const std::string fname = "blank.png";
     const std::string objname = "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\dragon.txt";
     Mesh* mesh = MeshBuilder::loadFromObj(&objname, &fname);
-    Shader s("C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\vertex.glsl", "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\frag.glsl");
 
     Transform transform;
     transform.scale = { 2,2,2 };
@@ -36,11 +35,6 @@ void testscene::start()
     d.color = { 0,0,1 };
     d.direction = { 0.5,0.5,0 };
     manager.registerComponent<MeshComponent, TransformComponent, CameraComponent,DirectionalLightComponent,PointLightComponent>(m,t,camera,d,p);
-    //for (const auto& elem : manager.componentID)
-    //{
-    //    std::cout << elem.first << " " << elem.second << "\n";
-    //}
- 
     manager.addComponent<MeshComponent>(1, std::make_shared<MeshComponent>(m));
     manager.addComponent<TransformComponent>(1, std::make_shared<TransformComponent>(t));
     manager.addComponent<CameraComponent>(0, std::make_shared<CameraComponent>(camera));
@@ -51,15 +45,24 @@ void testscene::start()
         lt.position = { 10*(sin(i*0.5)),10*(cos(i*0.5)),0};
         manager.addComponent<TransformComponent>(i, std::make_shared<TransformComponent>(lt));
     }
-    renderer.initRenderer();
     
-    
+    behaviors.push_back(&renderer);
+    behaviors.push_back(&controller);
+    for (Behavior* behavior : behaviors) {
+        behavior->init();
+    }
+   
 }
 
 void testscene::update()
 {
+    for (Behavior* behavior : behaviors) {
+        
+        behavior->update(&manager);
+        
+    }
     
-    renderer.Render(&manager);
+    
 }
 
 void testscene::close()

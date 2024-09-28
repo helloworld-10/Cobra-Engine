@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="..\Libraries\GLAD\src\glad.c" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="MeshBuilder.cpp" />
@@ -147,6 +148,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Behavior.h" />
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="glm\common.hpp" />
