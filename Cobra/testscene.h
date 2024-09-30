@@ -8,7 +8,6 @@ class testscene : public Scene {
 	virtual void update() override;
 	virtual void close() override;
 private:
-	Model model;
 	Renderer renderer;
 	CameraController controller;
 };

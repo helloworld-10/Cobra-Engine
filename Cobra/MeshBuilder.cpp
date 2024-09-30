@@ -2,12 +2,12 @@
 #pragma once
 #include "MeshBuilder.h"
 
-Mesh* MeshBuilder::createMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const std::string* texname) {
-	Mesh* mesh = new Mesh;
-	mesh->verts = vertices;
-	mesh->indices = indices;
+MeshComponent MeshBuilder::createMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const std::string* texname) {
+	MeshComponent mesh;
+	mesh.verts = vertices;
+	mesh.indices = indices;
 
-	Texture* tex = new Texture;
+	Texture tex;
 
 	unsigned int texture;
 	glGenTextures(1, &texture);
@@ -44,8 +44,8 @@ Mesh* MeshBuilder::createMesh(std::vector<Vertex> vertices, std::vector<unsigned
 	stbi_image_free(data);
 	glActiveTexture(0);
 
-	tex->id = texture;
-	mesh->texture = *tex;
+	tex.id = texture;
+	mesh.texture = tex;
 	//Generate vertex buffer object
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
@@ -55,9 +55,9 @@ Mesh* MeshBuilder::createMesh(std::vector<Vertex> vertices, std::vector<unsigned
 	//Generate Vertex array object
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
-	mesh->EBO = EBO;
-	mesh->VBO = VBO;
-	mesh->VAO = VAO;
+	mesh.EBO = EBO;
+	mesh.VBO = VBO;
+	mesh.VAO = VAO;
 	// ..:: Initialization code (done once (unless your object frequently changes)) :: ..
 	// 1. bind Vertex Array Object
 	glBindVertexArray(VAO);
@@ -85,7 +85,7 @@ Mesh* MeshBuilder::createMesh(std::vector<Vertex> vertices, std::vector<unsigned
 }
 
 
-Mesh* MeshBuilder::loadFromObj(const std::string* filename, const std::string* texname) {
+MeshComponent MeshBuilder::loadFromObj(const std::string* filename, const std::string* texname) {
 	std::ifstream in;
 	in.open((*filename));
 	if (!in.is_open()) {
@@ -100,7 +100,6 @@ Mesh* MeshBuilder::loadFromObj(const std::string* filename, const std::string* t
 	while (in.peek() != EOF && getline(in, line)) {
 		int head = line.find(" ");
 		std::string type = line.substr(0, head);
-		//std::cout << type << ' ';
 		//head++;
 		if (type == "v") {
 			for (int i = 0; i < 3; i++)
@@ -139,7 +138,7 @@ Mesh* MeshBuilder::loadFromObj(const std::string* filename, const std::string* t
 			{
 				int nhead = line.find(" ", head+1);
 				std::string face = line.substr(head+1, nhead-head);
-				//std::cout << face << ' ';
+
 				Vertex v;
 				unsigned int inList;
 				int _head = 0;
@@ -150,11 +149,11 @@ Mesh* MeshBuilder::loadFromObj(const std::string* filename, const std::string* t
 					if (_nhead < 0) {
 						_nhead = face.length();
 					}
-					//std::cout << face.substr(_head, _nhead-_head) << ' ';
+
 					
 
 					unsigned int vertVal = std::stoi(face.substr(_head, _nhead-_head));
-					//std::cout << vertVal << ' ';
+
 					vertVal--;
 					switch (j) {
 					case 0:
@@ -180,9 +179,6 @@ Mesh* MeshBuilder::loadFromObj(const std::string* filename, const std::string* t
 			}
 		}
 	}
-	//for (int i : indices)
-		//std::cout << i << ' ';
-	//MeshBuilder::createMesh();
 	in.close();
 	return MeshBuilder::createMesh(vertices,indices,texname);
 }

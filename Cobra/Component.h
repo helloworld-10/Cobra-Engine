@@ -7,7 +7,10 @@ struct Component{
 
 };
 struct MeshComponent:public Component {
-	Mesh* m;
+	std::vector<Vertex> verts;
+	std::vector<unsigned int> indices;
+	Texture texture;
+	unsigned int VAO, VBO, EBO;
 };
 
 
@@ -42,4 +45,34 @@ struct SpotlightComponent :public Component {
 	glm::vec3 color;
 	float innerCutoff;
 	float outerCutoff;
+};
+
+struct SphereColliderComponent :public Component {
+	glm::vec3 offset;
+	float radius;
+};
+
+struct AABBColliderComponent :public Component {
+	glm::vec3 offset;
+	float width;
+	float height;
+	float depth;
+};
+
+struct OBBColliderComponent :public Component {
+	glm::vec3 offset;
+	glm::vec3 axisX;
+	glm::vec3 axisY;
+	glm::vec3 axisZ;
+	glm::vec3 halfSize;
+
+
+};
+
+struct RigidBodyComponent :public Component {
+	glm::vec3 velocity;
+	glm::vec3 rotationalVelocity;
+	float mass;
+	glm::vec3 COM;
+	bool movable;
 };

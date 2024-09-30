@@ -3,19 +3,16 @@
 void testscene::start()
 {
     const std::string fname = "blank.png";
-    const std::string objname = "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\dragon.txt";
-    Mesh* mesh = MeshBuilder::loadFromObj(&objname, &fname);
+    const std::string objname = "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\cube.txt";
+    MeshComponent m = MeshBuilder::loadFromObj(&objname, &fname);
 
     Transform transform;
     transform.scale = { 2,2,2 };
     transform.position = { 0,-5,0 };
-    model.t.push_back(transform);
     
     
     
     
-    MeshComponent m;
-    m.m = mesh;
     TransformComponent t;
     t.position = transform.position;
     t.scale = transform.scale;

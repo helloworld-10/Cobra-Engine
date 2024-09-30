@@ -8,7 +8,10 @@ using bitset = int;
 using entity = int;
 class ComponentManager {
 public:
-
+	entity entityIndex;
+	entity generateEntity() {
+		return entityIndex++;
+	};
 
 
 	template<typename T>
@@ -88,12 +91,23 @@ public:
 		return ((bits & 1<<id) > 0) ? true : false;
 	}
 
+	template<typename T>
+	inline std::vector<entity> getEntities()
+	{
+		int id = componentID[typeid(T).name()];
+		std::vector<entity> out;
+		out.reserve((*components[id]).size());
+		for (const auto& pair : *components[id]) {
+			out.push_back(pair.first);
+		}
+		return out;
+	}
 	std::vector<entity> getEntities();
 
 	int componentIndex = 1;
 	std::unordered_map<entity,bitset> entityComponents;
 
-	std::vector<std::unique_ptr<std::unordered_map<int, std::shared_ptr<Component>>>> components;
+	std::vector<std::unique_ptr<std::unordered_map<entity, std::shared_ptr<Component>>>> components;
 	//TODO: implement sparse set, make vector of sparse sets to store components, use entities as keys for the sparseset
 	std::unordered_map<std::string, int> componentID;
 };

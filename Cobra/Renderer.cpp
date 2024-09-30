@@ -26,18 +26,20 @@ void Renderer::update(ComponentManager* manager)
     
     findCamera(manager);
    
+    /*std::vector<entity> entities = manager->getEntities<MeshComponent>();*/
     std::vector<entity> entities = manager->getEntities();
-    
     for (entity entity : entities) {
         
         if (manager->hasComponent<MeshComponent>(entity)) {
-            
+           
             meshes[manager->getComponent<MeshComponent>(entity)].push_back(*(manager->getComponent<TransformComponent>(entity)));
+            
         }
         
         if (manager->hasComponent<PointLightComponent>(entity)) {
             lights.push_back(*manager->getComponent<PointLightComponent>(entity));
             lightTransforms.push_back(*manager->getComponent<TransformComponent>(entity));
+            
         }
         if (manager->hasComponent<DirectionalLightComponent>(entity)) {
             sun = manager->getComponent<DirectionalLightComponent>(entity);
@@ -47,6 +49,7 @@ void Renderer::update(ComponentManager* manager)
     for (const auto& mesh : meshes) {
         
         Renderer::Render(mesh.first, mesh.second);
+        
     }
     
     meshes.clear();
@@ -74,9 +77,9 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<Transform
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0); // 
     
-    glBindTexture(GL_TEXTURE_2D, mesh->m->texture.id);
+    glBindTexture(GL_TEXTURE_2D, mesh->texture.id);
 
-    glBindVertexArray(mesh->m->VAO);
+    glBindVertexArray(mesh->VAO);
     
     // vertex attributes
     
@@ -100,11 +103,11 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<Transform
     glVertexAttribDivisor(6, 1);
     glBindVertexArray(0);
     glDeleteBuffers(1, &transformbuffer);
-    glBindVertexArray(mesh->m->VAO);
+    glBindVertexArray(mesh->VAO);
 
 
     (*shader).use();
-
+    
     
     camera->projection = glm::perspective(glm::radians(camera->fov), 800.0f / 600.0f, 0.1f, 1000.0f);
     camera->camFront = glm::normalize(camera->camFront);
@@ -121,11 +124,13 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<Transform
     float g = glm::max(glm::cos(glfwGetTime()), 0.2);
     float b = glm::max(glm::sin(glfwGetTime()) * glm::sin(glfwGetTime()), 0.2);
     glm::vec3 lightColor(r, g, b);
-
+    
     (*shader).setVec3("camPos", camera->position);
     shader->setPointLightArray("pointLights", lights,lightTransforms);
     shader->setDirLight("dirLight", *sun);
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<unsigned int>(mesh->m->indices.size()), GL_UNSIGNED_INT, 0, transform.size());
+    
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<unsigned int>(mesh->indices.size()), GL_UNSIGNED_INT, 0, transform.size());
+    
     glBindVertexArray(0);
     /* Swap front and back buffers */
     glfwSwapBuffers(glfwGetCurrentContext());
