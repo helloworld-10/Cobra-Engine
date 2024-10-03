@@ -71,8 +71,14 @@ struct OBBColliderComponent :public Component {
 
 struct RigidBodyComponent :public Component {
 	glm::vec3 velocity;
+	glm::vec3 accel;
 	glm::vec3 rotationalVelocity;
 	float mass;
 	glm::vec3 COM;
 	bool movable;
+	inline void addForce(glm::vec3 force) {
+		accel += force;
+	};
+
 };
+

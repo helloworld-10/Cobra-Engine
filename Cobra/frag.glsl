@@ -21,7 +21,7 @@ struct PointLight {
     vec3 function;  
     vec3 color;
 };
-#define NR_POINT_LIGHTS 10  
+#define NR_POINT_LIGHTS 1  
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform DirectionalLight dirLight;
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);

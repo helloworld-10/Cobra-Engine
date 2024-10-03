@@ -11,8 +11,8 @@ void Renderer::init() {
 	glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
-    //glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendFuncSeparate(GL_SRC1_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 	glCullFace(GL_BACK);
     glClearColor(1, 0, 0, 1);
@@ -28,11 +28,12 @@ void Renderer::update(ComponentManager* manager)
    
     /*std::vector<entity> entities = manager->getEntities<MeshComponent>();*/
     std::vector<entity> entities = manager->getEntities();
+    
     for (entity entity : entities) {
         
         if (manager->hasComponent<MeshComponent>(entity)) {
-           
-            meshes[manager->getComponent<MeshComponent>(entity)].push_back(*(manager->getComponent<TransformComponent>(entity)));
+            
+            meshes[manager->getComponent<MeshComponent>(entity)].push_back((manager->getComponent<TransformComponent>(entity)));
             
         }
         
@@ -63,16 +64,18 @@ void Renderer::exit()
 }
 
 
-void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<TransformComponent> transforms)
+void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<std::shared_ptr<TransformComponent>> transforms)
 {
+    
     std::vector<glm::mat4> transform;
-        
+    
         for (int i = 0; i < transforms.size(); i++) {
             transform.push_back(glm::mat4(1.0));
-            transform[i] = glm::scale(transform[i], transforms[i].scale);
-            transform[i] = glm::translate(transform[i], transforms[i].position);
+            transform[i] = glm::scale(transform[i], transforms[i]->scale);
+            transform[i] = glm::translate(transform[i], transforms[i]->position);
             //add rotation with quaternion
         }
+        
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0); // 

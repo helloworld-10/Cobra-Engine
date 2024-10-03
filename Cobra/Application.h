@@ -19,6 +19,7 @@ public:
 	static double getYChange();
 	static double getScrollYPos();
 	static double getScrollXPos();
+	static float getDeltaTime();
 private:
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);

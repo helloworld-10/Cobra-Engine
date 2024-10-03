@@ -3,7 +3,7 @@
 void testscene::start()
 {
     const std::string fname = "blank.png";
-    const std::string objname = "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\cube.txt";
+    const std::string objname = "C:\\Users\\Rajit\\source\\repos\\Cobra\\Cobra\\dragon.txt";
     MeshComponent m = MeshBuilder::loadFromObj(&objname, &fname);
 
     Transform transform;
@@ -16,6 +16,7 @@ void testscene::start()
     TransformComponent t;
     t.position = transform.position;
     t.scale = transform.scale;
+
     CameraComponent camera;
     camera.position = glm::vec3(0, 10.0, 10);
     camera.camFront = glm::vec3(0.0, 0.0, -1.0);
@@ -26,22 +27,28 @@ void testscene::start()
     p.attenuation = { 1,0.14,.07 };
     p.color = { 0.894, 0.721, 0.043 };
 
-    
+    std::shared_ptr<MeshComponent> mp = std::make_shared<MeshComponent>(m);
 
     DirectionalLightComponent d;
     d.color = { 0,0,1 };
     d.direction = { 0.5,0.5,0 };
     manager.registerComponent<MeshComponent, TransformComponent, CameraComponent,DirectionalLightComponent,PointLightComponent>(m,t,camera,d,p);
-    manager.addComponent<MeshComponent>(1, std::make_shared<MeshComponent>(m));
+    manager.addComponent<MeshComponent>(1, mp);
     manager.addComponent<TransformComponent>(1, std::make_shared<TransformComponent>(t));
     manager.addComponent<CameraComponent>(0, std::make_shared<CameraComponent>(camera));
+
     manager.addComponent<DirectionalLightComponent>(2, std::make_shared<DirectionalLightComponent>(d));
-    for (int i = 3; i < 13; i++) {
-        manager.addComponent<PointLightComponent>(i, std::make_shared<PointLightComponent>(p));
+    for (int i = 4; i < 10; i++) {
+        manager.addComponent<MeshComponent>(i, mp);
         TransformComponent lt;
-        lt.position = { 10*(sin(i*0.5)),10*(cos(i*0.5)),0};
+        lt.position = { 10 * i,5,0 };
+        lt.scale = { 1,1,1 };
         manager.addComponent<TransformComponent>(i, std::make_shared<TransformComponent>(lt));
     }
+    manager.addComponent<PointLightComponent>(4, std::make_shared<PointLightComponent>(p));
+    manager.addComponent<TransformComponent>(4, std::make_shared<TransformComponent>(t));
+
+
     
     behaviors.push_back(&renderer);
     behaviors.push_back(&controller);

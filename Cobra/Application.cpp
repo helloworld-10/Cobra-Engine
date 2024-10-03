@@ -7,6 +7,8 @@ static bool keys[348];
 static bool mouseButton[3];
 static bool isDragging;
 static double lastXPos, lastYPos, currXPos, currYPos,scrollX,scrollY;
+int frameCount;
+double previousTime;
 void Application::start()
 {
 
@@ -57,8 +59,19 @@ void Application::run()
 {
     while (!glfwWindowShouldClose(window))
     {
+        previousTime = glfwGetTime();
         scene->update();
-       // glfwGetCursorPos(window, &lastXPos, &lastYPos);
+        
+        //frameCount++;
+        
+        //if (currentTime - previousTime >= 1.0)
+        //{
+            
+            //std::cout << getDeltaTime() << std::endl;
+
+            //frameCount = 0;
+            //previousTime = currentTime;
+        //}
 
     }
 }
@@ -135,4 +148,8 @@ double Application::getScrollYPos() {
 }
 double Application::getScrollXPos() {
     return scrollX;
+}
+
+float Application::getDeltaTime() {
+    return (glfwGetTime() - previousTime);
 }
