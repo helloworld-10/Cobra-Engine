@@ -1,5 +1,6 @@
 #pragma once
 #include "Behavior.h"
+#include "Application.h"
 class PhysicsEngine : public Behavior {
 	void init() override;
 	void update(ComponentManager* manager) override;
@@ -12,8 +13,9 @@ private:
 	void resolveCollisions();
 	void collisionEvents();
 	struct PhysicsObject {
-		RigidBodyComponent rb;
-		TransformComponent t;
+		std::shared_ptr<RigidBodyComponent> rb;
+		std::shared_ptr<TransformComponent> t;
 	};
+	std::vector<PhysicsObject> objects;
 
 };

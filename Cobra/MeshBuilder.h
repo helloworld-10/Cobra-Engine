@@ -6,7 +6,6 @@
 #include <fstream>
 #include <string>
 #include "glm/vec3.hpp"
-#include "Mesh.h"
 #include "Component.h"
 
 class MeshBuilder {

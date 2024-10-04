@@ -49,12 +49,9 @@ void CameraController::update(ComponentManager* manager)
         Application::closeWindow();
     }
     if (Application::isKeyPressed(GLFW_KEY_E)) {
-        camera->position = manager->getComponent<TransformComponent>(3)->position;
-        //camera->position = { 30,20,0 };
+        manager->getComponent<RigidBodyComponent>(1)->velocity={ 0, 1, 0 };
     }
-    if (Application::isKeyPressed(GLFW_KEY_Q)) {
-        camera->position = { 00,00,0 };
-    }
+
     camera->camFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     camera->camFront.y = sin(glm::radians(pitch));
     camera->camFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));

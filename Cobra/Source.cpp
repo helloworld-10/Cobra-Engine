@@ -8,13 +8,10 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Vertex.h"
-
-#include "Mesh.h"
 #include "MeshBuilder.h"
 #include "Shader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "Model.h"
 #include "Renderer.h"
 #include "Application.h"
 #include "testscene.h"

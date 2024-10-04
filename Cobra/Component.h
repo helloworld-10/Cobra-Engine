@@ -1,7 +1,8 @@
 #pragma once
 #include "glm/ext/vector_float3.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "Mesh.h"
+#include "Vertex.h"
+#include "Texture.h"
 
 struct Component{
 
@@ -17,7 +18,7 @@ struct MeshComponent:public Component {
 struct TransformComponent :public Component {
 	glm::vec3 position;
 	glm::vec3 scale;
-	glm::quat rotation;
+	glm::vec3 rotation;
 };
 
 
@@ -70,14 +71,14 @@ struct OBBColliderComponent :public Component {
 };
 
 struct RigidBodyComponent :public Component {
-	glm::vec3 velocity;
-	glm::vec3 accel;
+	glm::vec3 velocity = {0,0,0};
+	glm::vec3 accel = {0,0,0};
 	glm::vec3 rotationalVelocity;
-	float mass;
+	float mass = 1;
 	glm::vec3 COM;
-	bool movable;
+	bool isStatic = false;
 	inline void addForce(glm::vec3 force) {
-		accel += force;
+		accel += force/mass;
 	};
 
 };
