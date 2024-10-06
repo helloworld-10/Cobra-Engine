@@ -16,40 +16,51 @@ void CameraController::init()
 
 void CameraController::update(ComponentManager* manager)
 {
+    std::shared_ptr<TransformComponent> t;
     std::shared_ptr<CameraComponent> camera;
+    
     for (entity entity : manager->getEntities()) {
         if (manager->hasComponent<CameraComponent>(entity)) {
             camera = manager->getComponent<CameraComponent>(entity);
+            t = manager->getComponent<TransformComponent>(entity);
         }
     }
+    glm::vec3 p = t->position;
+    std::cout << std::to_string(p.x) + " "+ std::to_string(p.y) + " " + std::to_string(p.z) << std::endl;
     float speed = 0.2f;
     glm::vec3 right = { 1,0,0 };
     glm::vec3 up = { 0,1,0 };
     glm::vec3 forward = { 0,0,1 };
     if (Application::isKeyPressed(GLFW_KEY_W)) {
-
-        camera->position += speed * camera->camFront;
+        t->position += speed * camera->camFront;
     }
     if (Application::isKeyPressed(GLFW_KEY_A)) {
-        camera->position -= speed * glm::cross(camera->camFront, camera->camUp);
+        t->position -= speed * glm::cross(camera->camFront, camera->camUp);
     }
     if (Application::isKeyPressed(GLFW_KEY_S)) {
-        camera->position -= speed * camera->camFront;
+        t->position -= speed * camera->camFront;
     }
     if (Application::isKeyPressed(GLFW_KEY_D)) {
-        camera->position += speed * glm::cross(camera->camFront, camera->camUp);
+        t->position += speed * glm::cross(camera->camFront, camera->camUp);
     }
     if (Application::isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-        camera->position -= speed * up;
+        t->position -= speed * up;
     }
     if (Application::isKeyPressed(GLFW_KEY_SPACE)) {
-        camera->position += speed * up;
+        t->position += speed * up;
     }
     if (Application::isKeyPressed(GLFW_KEY_ESCAPE)) {
         Application::closeWindow();
     }
     if (Application::isKeyPressed(GLFW_KEY_E)) {
-        manager->getComponent<RigidBodyComponent>(1)->velocity={ 0, 1, 0 };
+        //manager->getComponent<RigidBodyComponent>(1)->velocity={ 0, 1, 0 };
+        manager->getComponent<RigidBodyComponent>(1)->addTorque( {-1, 5, 2});
+
+    }
+    if (Application::isKeyPressed(GLFW_KEY_R)) {
+        //manager->getComponent<RigidBodyComponent>(1)->velocity={ 0, 1, 0 };
+        manager->getComponent<RigidBodyComponent>(1)->addTorque({ 1, -5, -2 });
+
     }
 
     camera->camFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

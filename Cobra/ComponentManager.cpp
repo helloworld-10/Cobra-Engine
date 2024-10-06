@@ -9,14 +9,3 @@ std::vector<entity> ComponentManager::getEntities() {
 	}
 	return out;
 }
-//template <typename T>
-//std::vector<T> ComponentManager::getComponents(const std::string* name)
-//{
-//	int id = componentID[*name];
-//	std::vector<T> out;
-//	out.reserve(components[id].size);
-//	for (const auto& pair : components[id]) {
-//		out.push_back(pair.first);
-//	}
-//	return out;
-//}

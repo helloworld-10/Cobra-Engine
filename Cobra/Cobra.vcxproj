@@ -135,7 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Libraries\GLAD\src\glad.c" />
+    <ClCompile Include="..\..\Engine\Libraries\GLAD\src\glad.c" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="ComponentManager.cpp" />

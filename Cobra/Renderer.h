@@ -16,6 +16,7 @@ class Renderer : public Behavior{
 		void findCamera(ComponentManager* manager);
 		void Render(std::shared_ptr<MeshComponent> mesh, std::vector<std::shared_ptr<TransformComponent>> transforms);
 	std::shared_ptr<CameraComponent> camera;
+	std::shared_ptr<TransformComponent> cameraPos;
 		std::unordered_map<std::shared_ptr<MeshComponent>, std::vector<std::shared_ptr<TransformComponent>>> meshes;
 		std::vector <PointLightComponent> lights;
 		std::vector<TransformComponent> lightTransforms;

@@ -106,7 +106,6 @@ public:
 
 	int componentIndex = 1;
 	std::unordered_map<entity,bitset> entityComponents;
-
 	std::vector<std::unique_ptr<std::unordered_map<entity, std::shared_ptr<Component>>>> components;
 	//TODO: implement sparse set, make vector of sparse sets to store components, use entities as keys for the sparseset
 	std::unordered_map<std::string, int> componentID;
