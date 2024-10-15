@@ -68,13 +68,12 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<std::shar
 {
     
     std::vector<glm::mat4> transform;
-    transform.reserve(transforms.size());
+    
         for (int i = 0; i < transforms.size(); i++) {
             transform.push_back(glm::mat4(1.0));
             transform[i] = glm::scale(transform[i], transforms[i]->scale);
             transform[i] = glm::translate(transform[i], transforms[i]->position);
-            glm::quat q = glm::quat(transforms[i]->rotation);
-            transform[i] *= glm::mat4_cast(q);
+            //add rotation with quaternion
         }
         
     
@@ -116,7 +115,7 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<std::shar
     camera->projection = glm::perspective(glm::radians(camera->fov), 800.0f / 600.0f, 0.1f, 1000.0f);
     camera->camFront = glm::normalize(camera->camFront);
 
-    glm::mat4 view = glm::lookAt(cameraPos->position, cameraPos->position + camera->camFront, camera->camUp);
+    glm::mat4 view = glm::lookAt(camera->position, camera->position + camera->camFront, camera->camUp);
     shader->setMat4("view", view);
     shader->setMat4("projection", camera->projection);
     float lightX = sin(glfwGetTime()) * 10.0;
@@ -129,7 +128,7 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<std::shar
     float b = glm::max(glm::sin(glfwGetTime()) * glm::sin(glfwGetTime()), 0.2);
     glm::vec3 lightColor(r, g, b);
     
-    (*shader).setVec3("camPos", cameraPos->position);
+    (*shader).setVec3("camPos", camera->position);
     shader->setPointLightArray("pointLights", lights,lightTransforms);
     shader->setDirLight("dirLight", *sun);
     
@@ -143,7 +142,6 @@ void Renderer::Render(std::shared_ptr<MeshComponent> mesh, std::vector<std::shar
 
 void Renderer::findCamera(ComponentManager* manager){
     camera = (manager->getComponent<CameraComponent>(0));
-    cameraPos = (manager->getComponent<TransformComponent>(0));
 }
 
 
