@@ -7,7 +7,6 @@
 #include <string>
 #include "glm/vec3.hpp"
 #include "Component.h"
-
 class MeshBuilder {
 public:
 	static MeshComponent createMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const std::string* texname);
